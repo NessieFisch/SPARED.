@@ -14,10 +14,15 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 9.5.1
-      - run: gradle build --no-daemon
+      - name: Build
+        run: |
+          FILE=$(find . -name settings.gradle -not -path './.git/*' | head -n 1)
+          echo "Found project at: $FILE"
+          cd "$(dirname "$FILE")"
+          gradle build --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: myclient-mod
           path: |
-            build/libs/myclient-*.jar
-            !build/libs/*-sources.jar
+            **/build/libs/myclient-*.jar
+            !**/build/libs/*-sources.jar
