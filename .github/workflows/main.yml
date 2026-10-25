@@ -20,9 +20,11 @@ jobs:
           echo "Found project at: $FILE"
           cd "$(dirname "$FILE")"
           gradle build --no-daemon
+          echo "---- JARS ----"
+          find . -name "*.jar" -path "*build/libs*"
       - uses: actions/upload-artifact@v4
         with:
           name: myclient-mod
-          path: |
-            **/build/libs/myclient-*.jar
-            !**/build/libs/*-sources.jar
+          path: "**/build/libs/*.jar"
+          include-hidden-files: true
+          if-no-files-found: error
